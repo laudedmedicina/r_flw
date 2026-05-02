@@ -1,0 +1,595 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;1,400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c10;--s1:#11141a;--s2:#181c25;--s3:#1f2330;--s4:#252a38;
+  --b1:#ffffff0a;--b2:#ffffff14;--b3:#ffffff1e;
+  --acc:#7c6dfa;--teal:#4fd9c4;--coral:#f97c6d;--amber:#f9c46d;--blue:#6da8f9;--pink:#f96db8;
+  --t1:#e8eaf0;--t2:#8a8fa8;--t3:#4a4f65;
+  --font:'Outfit',sans-serif;--mono:'DM Mono',monospace;--disp:'Fraunces',serif;
+  --r:10px;--r2:14px;
+}
+body{background:var(--bg);font-family:var(--font);color:var(--t1);overflow:auto}
+.app{display:grid;grid-template-columns:230px 1fr 260px;grid-template-rows:52px 1fr 52px;height:620px;overflow:auto}
+
+/* TOPBAR */
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--b1);background:var(--s1)}
+.tb-logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--acc),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.tb-name{font-family:var(--disp);font-size:14px;white-space:nowrap}<br>.tb-name em{font-style:italic;color:var(--teal)}
+.tb-divider{width:1px;height:20px;background:var(--b2);flex-shrink:0}
+.tb-prog{display:flex;align-items:center;gap:8px;flex:1;max-width:380px}
+.pbar{flex:1;height:2px;background:var(--s3);border-radius:2px;overflow:auto}
+.pfill{height:100%;background:linear-gradient(90deg,var(--acc),var(--teal));transition:width .4s cubic-bezier(.4,0,.2,1)}
+.tb-step{font-size:11px;color:var(--t3);white-space:nowrap}
+.tb-tags{display:flex;gap:6px;margin-left:auto}
+.tb-tag{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--b2);color:var(--t3);background:var(--s2);white-space:nowrap;font-family:var(--mono)}
+
+/* SIDEBAR */
+.sidebar{background:var(--s1);border-right:1px solid var(--b1);overflow-y:auto;padding:10px 0;scrollbar-width:none}
+.sec-hd{padding:5px 14px 3px;font-size:9px;font-weight:600;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+.si{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;transition:background .12s;position:relative}
+.si:hover{background:var(--s2)}
+.si.active{background:var(--s2)}
+.si.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--acc),var(--teal))}
+.si-n{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;transition:all .2s}
+.si-n.done{background:#4fd9c41a;color:var(--teal)}
+.si-n.active{background:linear-gradient(135deg,var(--acc),var(--teal));color:#fff;box-shadow:0 0 10px #7c6dfa44}
+.si-n.pend{background:var(--s3);color:var(--t3)}
+.si-label{font-size:12px;color:var(--t2)}.si.active .si-label{color:var(--t1);font-weight:500}.si.done .si-label{color:var(--t3)}
+.si-sub{font-size:10px;color:var(--t3);font-family:var(--mono);margin-top:1px}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.mhead{padding:16px 20px 14px;border-bottom:1px solid var(--b1);flex-shrink:0}
+.mh-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.chip{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid}
+.chip.step{color:var(--acc);border-color:#7c6dfa30;background:#7c6dfa0c}
+.chip.pkg{color:var(--amber);border-color:#f9c46d28;background:#f9c46d08;font-family:var(--mono)}
+.mh-title{font-size:17px;font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.mh-desc{font-size:12.5px;color:var(--t2);line-height:1.55;margin-top:5px}
+.mbody{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--s3) transparent}
+
+/* RIGHT PANEL */
+.rpanel{background:var(--s1);border-left:1px solid var(--b1);overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:none}
+.rp-hd{padding:14px 16px 10px;border-bottom:1px solid var(--b1);flex-shrink:0}
+.rp-title{font-size:12px;font-weight:600;color:var(--t1);letter-spacing:-.01em;display:flex;align-items:center;gap:7px}
+.rp-icon{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px}
+.rp-icon.graph{background:#7c6dfa18;color:var(--acc)}
+.rp-icon.test{background:#4fd9c418;color:var(--teal)}
+.rp-icon.table{background:#f9c46d18;color:var(--amber)}
+.rp-sub{font-size:11px;color:var(--t3);margin-top:3px}
+.rp-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+
+/* TIP CARDS */
+.tip-card{border-radius:var(--r);border:1px solid var(--b1);overflow:hidden}
+.tc-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--b1)}
+.tc-badge{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:10px}
+.tc-badge.graph{background:#7c6dfa1a;color:var(--acc);border:1px solid #7c6dfa28}
+.tc-badge.test{background:#4fd9c41a;color:var(--teal);border:1px solid #4fd9c428}
+.tc-badge.table{background:#f9c46d1a;color:var(--amber);border:1px solid #f9c46d28}
+.tc-badge.warn{background:#f97c6d1a;color:var(--coral);border:1px solid #f97c6d28}
+.tc-name{font-size:12px;font-weight:500;color:var(--t1)}
+.tc-body{padding:10px 12px;background:var(--bg)}
+.tc-when{font-size:11px;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.tc-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.tc-list li{font-size:11.5px;color:var(--t2);line-height:1.45;display:flex;gap:6px}
+.tc-list li::before{content:'→';color:var(--t3);flex-shrink:0;font-size:10px;margin-top:1px}
+.tc-code{font-family:var(--mono);font-size:10.5px;background:var(--s2);padding:6px 10px;border-radius:6px;color:var(--t2);margin-top:8px;border:1px solid var(--b1)}
+.tc-vs{display:flex;gap:6px;margin-top:8px}
+.vs-pill{flex:1;text-align:center;font-size:10px;padding:4px 6px;border-radius:6px;border:1px solid var(--b1);background:var(--s2);color:var(--t3)}
+.vs-pill.hi{border-color:var(--b2);color:var(--t2)}
+
+/* CODE */
+.cw{border:1px solid var(--b1);border-radius:var(--r);overflow:auto;background:var(--s1)}
+.cbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.cdots{display:flex;gap:4px}.cd{width:8px;height:8px;border-radius:50%}
+.cd:nth-child(1){background:#f97c6d50}.cd:nth-child(2){background:#f9c46d50}.cd:nth-child(3){background:#4fd9c450}
+.clang{font-size:10px;font-weight:500;color:var(--t3);font-family:var(--mono);flex:1;text-align:center;letter-spacing:.06em}
+.ccopy{font-size:11px;color:var(--t3);background:transparent;border:1px solid var(--b2);padding:3px 9px;border-radius:5px;cursor:pointer;font-family:var(--font);transition:all .15s}
+.ccopy:hover{color:var(--t1);background:var(--s3)}.ccopy.ok{color:var(--teal);border-color:#4fd9c430}
+pre{padding:14px;font-size:11.5px;font-family:var(--mono);line-height:1.75;overflow-x:auto;color:#c8ccd8;font-weight:300}
+
+/* OUTPUT */
+.ow{border:1px solid var(--b1);border-radius:var(--r);overflow:auto}
+.obar{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.odot{width:5px;height:5px;border-radius:50%;background:var(--teal)}
+.olabel{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:.05em}
+.obody{padding:12px;font-size:11.5px;font-family:var(--mono);color:#7dd9bf;background:#091210;line-height:1.7;white-space:pre;overflow-x:auto;font-weight:300}
+
+/* ALERT */
+.alert{border-radius:var(--r);padding:11px 14px;display:flex;gap:10px;border:1px solid}
+.alert.info{background:#7c6dfa08;border-color:#7c6dfa22}
+.alert.warn{background:#f9c46d08;border-color:#f9c46d22}
+.alert.good{background:#4fd9c408;border-color:#4fd9c422}
+.ai{font-size:13px;flex-shrink:0;margin-top:1px}
+.at{font-size:12.5px;color:var(--t2);line-height:1.55}
+.at strong{color:var(--t1);font-weight:500}
+.at code{font-family:var(--mono);font-size:11px;background:var(--s3);padding:1px 5px;border-radius:4px;color:var(--teal)}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px}
+.mc-l{font-size:9px;color:var(--t3);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.mc-v{font-size:18px;font-weight:600;letter-spacing:-.02em}
+.mc-s{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* VIZ */
+.vw{border:1px solid var(--b1);border-radius:var(--r);overflow:auto}
+.vbar{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.vlabel{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:.05em}
+.vbody{padding:14px;background:var(--s1)}
+
+/* DECISION TABLE */
+.dtable{width:100%;border-collapse:collapse;font-size:11.5px}
+.dtable th{padding:7px 10px;text-align:left;font-size:9px;font-weight:600;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--b2)}
+.dtable td{padding:8px 10px;border-bottom:1px solid var(--b1);vertical-align:top;line-height:1.45;color:var(--t2)}
+.dtable tr:last-child td{border-bottom:none}
+.dtable tr:hover td{background:var(--s2)}
+.dt-fn{font-family:var(--mono);font-size:11px;color:var(--teal)}
+.dt-tag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600}
+.dt-tag.param{background:#7c6dfa18;color:var(--acc)}.dt-tag.nonp{background:#f97c6d18;color:var(--coral)}.dt-tag.desc{background:#f9c46d18;color:var(--amber)}
+
+/* FOOTER */
+.footer{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-top:1px solid var(--b1);background:var(--s1)}
+.nbtn{font-size:12px;font-family:var(--font);padding:7px 16px;border-radius:7px;cursor:pointer;border:1px solid var(--b2);background:var(--s2);color:var(--t2);transition:all .15s}
+.nbtn:hover:not(:disabled){background:var(--s3);color:var(--t1)}.nbtn:disabled{opacity:.3;cursor:default}
+.nbtn.pri{background:linear-gradient(135deg,var(--acc),var(--teal));color:#fff;border:none;font-weight:500;box-shadow:0 0 18px #7c6dfa28}
+.nbtn.pri:hover{opacity:.88;box-shadow:0 0 26px #7c6dfa44}
+.fc{display:flex;align-items:center;gap:10px}
+.sdots{display:flex;gap:4px}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--s3);cursor:pointer;transition:all .2s}
+.sdot.done{background:var(--teal)}.sdot.active{background:var(--acc);width:16px;border-radius:3px}
+
+/* syntax */
+.kw{color:#b39dfa}.fn{color:#7dd9bf}.str{color:#f0997b}.num{color:#fac775}.cmt{color:#4a4f65;font-style:italic}.op{color:#7db9fa}.pk{color:#f9c46d}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">R Analysis Studio — step-by-step guide with smart tips on tests, charts, and tables</h2>
+
+<div class="app">
+  <div class="topbar">
+    <div class="tb-logo">R</div>
+    <span class="tb-name">Analysis <em>Studio</em></span>
+    <div class="tb-divider"></div>
+    <div class="tb-prog">
+      <div class="pbar"><div class="pfill" id="pfill" style="width:10%"></div></div>
+      <span class="tb-step" id="tstep">1 / 10</span>
+    </div>
+    <div class="tb-tags">
+      <span class="tb-tag" id="tpkg">base R</span>
+      <span class="tb-tag">mtcars</span>
+      <span class="tb-tag" id="ttag">load</span>
+    </div>
+  </div>
+
+  <nav class="sidebar" id="sidebar"></nav>
+
+  <div class="main">
+    <div class="mhead">
+      <div class="mh-row">
+        <span class="chip step" id="cstep"></span>
+        <span class="chip pkg" id="cpkg"></span>
+      </div>
+      <div class="mh-title" id="mtitle"></div>
+      <div class="mh-desc" id="mdesc"></div>
+    </div>
+    <div class="mbody" id="mbody"></div>
+  </div>
+
+  <aside class="rpanel" id="rpanel">
+    <div class="rp-hd">
+      <div class="rp-title"><div class="rp-icon graph">◈</div><span id="rp-title-txt">Smart tips</span></div>
+      <div class="rp-sub" id="rp-sub-txt">Recommendations for this step</div>
+    </div>
+    <div class="rp-body" id="rpbody"></div>
+  </aside>
+
+  <div class="footer">
+    <button class="nbtn" id="btnp" onclick="go(-1)">← Back</button>
+    <div class="fc">
+      <div class="sdots" id="sdots"></div>
+    </div>
+    <button class="nbtn pri" id="btnn" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+{
+  label:"Load dataset",tag:"load",pkg:"base R / readxl",
+  title:"Load your dataset",
+  desc:"Every analysis starts by getting data into R. Use built-in datasets for practice or import from CSV, Excel, or a database.",
+  blocks:[
+    {type:"metrics",items:[{l:"Rows",v:"32",s:"observations",c:"#7c6dfa"},{l:"Columns",v:"11",s:"variables",c:"#4fd9c4"},{l:"Type",v:"num",s:"all numeric",c:"#f9c46d"},{l:"NAs",v:"0",s:"complete",c:"#6da8f9"}]},
+    {type:"code",code:`<span class="cmt"># Built-in dataset</span>
+<span class="fn">data</span>(mtcars)
+
+<span class="cmt"># From CSV</span>
+df <span class="op">&lt;-</span> <span class="fn">read.csv</span>(<span class="str">"data.csv"</span>, stringsAsFactors = <span class="kw">FALSE</span>)
+
+<span class="cmt"># From Excel</span>
+<span class="fn">library</span>(<span class="pk">readxl</span>)
+df <span class="op">&lt;-</span> <span class="fn">read_excel</span>(<span class="str">"data.xlsx"</span>, sheet = <span class="num">1</span>)
+
+df <span class="op">&lt;-</span> mtcars   <span class="cmt"># working copy</span>`},
+    {type:"alert",kind:"info",icon:"💡",text:"<strong>Convention:</strong> Keep a <code>raw_df</code> copy untouched. Work on <code>df</code>. You can always reset without re-importing."}
+  ],
+  tips:[
+    {type:"graph",name:"No plot yet",when:"Before plotting",items:["Inspect dimensions first","Check column types before assuming numeric","Use glimpse() from dplyr for a tidy overview"],code:"glimpse(df)"},
+    {type:"table",name:"Head / tail table",when:"Always first",items:["head(df) shows first 6 rows","tail(df) shows last 6","names(df) lists all columns"],code:"head(df, 6)"}
+  ]
+},
+{
+  label:"Inspect structure",tag:"inspect",pkg:"base R",
+  title:"Understand data shape & types",
+  desc:"Before any analysis, learn dimensions, column types, and value ranges. Wrong assumptions here corrupt every downstream result.",
+  blocks:[
+    {type:"code",code:`<span class="fn">dim</span>(df)           <span class="cmt"># rows × cols</span>
+<span class="fn">str</span>(df)           <span class="cmt"># types + samples</span>
+<span class="fn">head</span>(df)
+<span class="fn">names</span>(df)
+<span class="fn">sapply</span>(df, class) <span class="cmt"># class per column</span>
+<span class="fn">summary</span>(df)       <span class="cmt"># quick stats`},
+    {type:"output",label:"str(df) output",text:`'data.frame': 32 obs. of 11 variables:
+ $ mpg : num  21 21 22.8 21.4 18.7 ...
+ $ cyl : num  6 6 4 6 8 6 8 4 ...
+ $ hp  : num  110 110 93 110 175 ...`},
+    {type:"alert",kind:"warn",icon:"⚠️",text:"<strong>Watch for:</strong> Columns that look numeric but are categories — <code>cyl</code>, <code>am</code>, <code>gear</code> should be <code>factor()</code> before modelling."}
+  ],
+  tips:[
+    {type:"table",name:"str() / glimpse()",when:"First step always",items:["str() shows type + sample values","glimpse() (dplyr) is tidier","class() checks one column"],code:"str(df) ; glimpse(df)"},
+    {type:"warn",name:"Type pitfalls",when:"Watch before modelling",items:["Numeric-coded categories mislead lm()","Dates stored as strings break time ops","Factor levels matter for contrasts"],code:"df$cyl <- factor(df$cyl)"}
+  ]
+},
+{
+  label:"Missing values",tag:"NA",pkg:"naniar / dplyr",
+  title:"Detect & handle missing data",
+  desc:"NAs silently corrupt means, models, and plots. Always quantify missingness before any computation.",
+  blocks:[
+    {type:"code",code:`<span class="cmt"># Count per column</span>
+<span class="fn">colSums</span>(<span class="fn">is.na</span>(df))
+<span class="fn">colMeans</span>(<span class="fn">is.na</span>(df)) <span class="op">*</span> <span class="num">100</span>  <span class="cmt"># %</span>
+
+<span class="cmt"># Visual map</span>
+<span class="fn">library</span>(<span class="pk">naniar</span>)
+<span class="fn">vis_miss</span>(df)
+
+<span class="cmt"># Remove rows with any NA</span>
+df_clean <span class="op">&lt;-</span> <span class="fn">na.omit</span>(df)
+
+<span class="cmt"># Mean imputation</span>
+df <span class="op">%&gt;%</span> <span class="fn">mutate</span>(<span class="fn">across</span>(
+  <span class="fn">where</span>(is.numeric),
+  <span class="op">~</span><span class="fn">ifelse</span>(<span class="fn">is.na</span>(.),<span class="fn">mean</span>(.,na.rm=<span class="kw">T</span>),.)))`},
+    {type:"alert",kind:"warn",icon:"⚠️",text:"<strong>Log removals:</strong> Never silently drop rows. Record how many observations were removed and justify your imputation strategy."}
+  ],
+  tips:[
+    {type:"graph",name:"vis_miss() heatmap",when:"Many columns / rows",items:["Shows NA pattern across full dataset","Cluster columns by missingness","Reveals if NAs are random or systematic"],code:"naniar::vis_miss(df)"},
+    {type:"test",name:"MCAR test (naniar)",when:"Before imputing",items:["Test: are NAs Missing Completely At Random?","mcar_test() from naniar","p > .05 → safe to impute with mean"],code:"mcar_test(df)"},
+    {type:"table",name:"NA summary table",when:"Quick overview",items:["colSums(is.na(df)) for counts","colMeans * 100 for percentages","Sort descending to prioritise"],code:"sort(colSums(is.na(df)), dec=T)"}
+  ]
+},
+{
+  label:"Summary stats",tag:"stats",pkg:"base R / dplyr",
+  title:"Descriptive statistics",
+  desc:"Compute central tendency, spread, and distribution shape before any modelling. Grouped stats reveal sub-population differences.",
+  blocks:[
+    {type:"code",code:`<span class="fn">summary</span>(df)          <span class="cmt"># all columns</span>
+<span class="fn">mean</span>(df<span class="op">$</span>mpg, na.rm=<span class="kw">T</span>)  <span class="cmt"># 20.09</span>
+<span class="fn">sd</span>(df<span class="op">$</span>mpg)             <span class="cmt"># 6.03</span>
+<span class="fn">quantile</span>(df<span class="op">$</span>mpg, c(.<span class="num">25</span>,.<span class="num">5</span>,.<span class="num">75</span>))
+
+<span class="fn">library</span>(<span class="pk">dplyr</span>)
+df <span class="op">%&gt;%</span> <span class="fn">group_by</span>(cyl) <span class="op">%&gt;%</span>
+  <span class="fn">summarise</span>(
+    mean = <span class="fn">mean</span>(mpg), sd = <span class="fn">sd</span>(mpg),
+    median = <span class="fn">median</span>(mpg), n = <span class="fn">n</span>()
+  )`},
+    {type:"output",label:"grouped summary",text:`  cyl  mean    sd  median   n
+1   4  26.7  4.51   26.0  11
+2   6  19.7  1.45   19.7   7
+3   8  15.1  2.56   15.2  14`}
+  ],
+  tips:[
+    {type:"table",name:"summary() table",when:"First look at any variable",items:["Min, Q1, Median, Mean, Q3, Max","Detects outliers via large gaps","Fast — always run before plotting"],code:"summary(df$mpg)"},
+    {type:"graph",name:"Histogram",when:"Distribution of one numeric var",items:["Use hist() or ggplot geom_histogram","Choose bins = sqrt(n) as starting point","Look for skew, bimodality, outliers"],code:"hist(df$mpg, breaks='Sturges')"},
+    {type:"graph",name:"Boxplot",when:"Comparing groups",items:["Shows median, IQR, and outliers","Better than bar chart for distributions","Pair with jitter for small samples"],code:"boxplot(mpg~cyl, data=df)"}
+  ]
+},
+{
+  label:"Statistical tests",tag:"tests",pkg:"stats / car",
+  title:"Choose & run the right test",
+  desc:"Selecting the wrong test invalidates your conclusions. The decision depends on your data type, sample size, and whether distributions are normal.",
+  blocks:[
+    {type:"dtable"},
+    {type:"code",code:`<span class="cmt"># Normality: Shapiro-Wilk (n < 50)</span>
+<span class="fn">shapiro.test</span>(df<span class="op">$</span>mpg)        <span class="cmt"># p > .05 = normal</span>
+
+<span class="cmt"># Equal variances: Levene's test</span>
+<span class="fn">library</span>(<span class="pk">car</span>)
+<span class="fn">leveneTest</span>(mpg <span class="op">~</span> <span class="fn">factor</span>(cyl), df)
+
+<span class="cmt"># Two-sample t-test (normal + equal var)</span>
+<span class="fn">t.test</span>(mpg <span class="op">~</span> am, data = df, var.equal = <span class="kw">TRUE</span>)
+
+<span class="cmt"># Non-parametric alternative</span>
+<span class="fn">wilcox.test</span>(mpg <span class="op">~</span> am, data = df)
+
+<span class="cmt"># One-way ANOVA (3+ groups)</span>
+aov_res <span class="op">&lt;-</span> <span class="fn">aov</span>(mpg <span class="op">~</span> <span class="fn">factor</span>(cyl), df)
+<span class="fn">summary</span>(aov_res)`},
+    {type:"alert",kind:"good",icon:"✅",text:"<strong>Workflow:</strong> Always test normality first → then test variance equality → then select parametric or non-parametric test."}
+  ],
+  tips:[
+    {type:"test",name:"Normality first",when:"Before any parametric test",items:["Shapiro-Wilk for n < 50","Kolmogorov-Smirnov for n ≥ 50","Q-Q plot is the visual check"],code:"shapiro.test(x) ; qqnorm(x)"},
+    {type:"test",name:"t-test vs Wilcoxon",when:"2-group comparison",items:["Normal + equal var → t.test()","Non-normal or small n → wilcox.test()","Paired data → add paired=TRUE"],code:"t.test(y~grp) or wilcox.test(y~grp)"},
+    {type:"test",name:"ANOVA vs Kruskal",when:"3+ group comparison",items:["Normal data → aov() + TukeyHSD","Non-normal → kruskal.test()","Post-hoc: pairwise.wilcox.test()"],code:"aov(y~grp) ; kruskal.test(y~grp)"},
+    {type:"graph",name:"Q-Q plot",when:"Checking normality visually",items:["Points on line = normal","Curved = skewed","Tails off = heavy-tailed dist."],code:"qqnorm(x); qqline(x)"}
+  ]
+},
+{
+  label:"Correlation",tag:"cor",pkg:"corrplot / stats",
+  title:"Correlation analysis",
+  desc:"Measure linear relationships between numeric variables. Flag multicollinearity before building models and discover unexpected associations.",
+  blocks:[
+    {type:"code",code:`<span class="cmt"># Pearson (linear, normal)</span>
+cor_mat <span class="op">&lt;-</span> <span class="fn">cor</span>(df, method=<span class="str">"pearson"</span>)
+
+<span class="cmt"># Spearman (ordinal / non-normal)</span>
+<span class="fn">cor</span>(df, method=<span class="str">"spearman"</span>)
+
+<span class="cmt"># Significance test</span>
+<span class="fn">cor.test</span>(df<span class="op">$</span>mpg, df<span class="op">$</span>hp)
+<span class="cmt"># r = -0.776, p < 2e-16</span>
+
+<span class="fn">library</span>(<span class="pk">corrplot</span>)
+<span class="fn">corrplot</span>(cor_mat, method=<span class="str">"color"</span>,
+  type=<span class="str">"upper"</span>, addCoef.col=<span class="str">"white"</span>)`},
+    {type:"viz",viz:"heatmap",label:"correlation heatmap — mtcars"}
+  ],
+  tips:[
+    {type:"test",name:"Pearson vs Spearman",when:"Choosing correlation method",items:["Pearson → continuous, normal, linear","Spearman → ordinal, non-normal, monotonic","Kendall → small n or many ties"],code:"cor(x,y,method='spearman')"},
+    {type:"graph",name:"Correlation heatmap",when:"Many variables at once",items:["corrplot() for annotated matrix","Use type='upper' to avoid redundancy","Colour encodes direction + magnitude"],code:"corrplot(cor_mat, method='color')"},
+    {type:"graph",name:"Scatter matrix",when:"Exploring all pairs visually",items:["pairs() in base R","ggpairs() from GGally is richer","Diagonal shows each variable's dist."],code:"GGally::ggpairs(df)"}
+  ]
+},
+{
+  label:"Visualize",tag:"ggplot2",pkg:"ggplot2",
+  title:"Exploratory visualization",
+  desc:"ggplot2's grammar of graphics — data → aesthetics → geometries. Choose the right geom for your question, not the prettiest one.",
+  blocks:[
+    {type:"code",code:`<span class="fn">library</span>(<span class="pk">ggplot2</span>)
+
+<span class="cmt"># Scatter + regression line</span>
+<span class="fn">ggplot</span>(df, <span class="fn">aes</span>(hp, mpg, colour=<span class="fn">factor</span>(cyl))) <span class="op">+</span>
+  <span class="fn">geom_point</span>(size=<span class="num">3</span>, alpha=<span class="num">.85</span>) <span class="op">+</span>
+  <span class="fn">geom_smooth</span>(method=<span class="str">"lm"</span>, se=<span class="kw">T</span>) <span class="op">+</span>
+  <span class="fn">scale_colour_manual</span>(
+    values=<span class="fn">c</span>(<span class="str">"#7c6dfa"</span>,<span class="str">"#4fd9c4"</span>,<span class="str">"#f97c6d"</span>)) <span class="op">+</span>
+  <span class="fn">facet_wrap</span>(<span class="op">~</span>cyl) <span class="op">+</span>
+  <span class="fn">theme_minimal</span>(base_size=<span class="num">12</span>)`},
+    {type:"viz",viz:"scatter",label:"scatter plot — mpg vs horsepower"}
+  ],
+  tips:[
+    {type:"graph",name:"Scatter plot",when:"Two continuous variables",items:["aes(x,y) + geom_point()","Add geom_smooth() for trend","Colour by group to add a 3rd dimension"],code:"geom_point() + geom_smooth()"},
+    {type:"graph",name:"Box / violin plot",when:"Distribution by group",items:["geom_boxplot() for IQR + outliers","geom_violin() shows full distribution","Layer geom_jitter() on small samples"],code:"geom_violin() + geom_boxplot(w=.1)"},
+    {type:"graph",name:"Bar chart",when:"Counts or means by category",items:["geom_bar() for counts","geom_col() for pre-computed values","Always show error bars for means"],code:"geom_col() + geom_errorbar()"},
+    {type:"graph",name:"Facet wrap",when:"Same plot across subgroups",items:["facet_wrap(~var) splits by one variable","facet_grid(r~c) for two-way splits","Free scales with scales='free'"],code:"facet_wrap(~cyl, scales='free')"}
+  ]
+},
+{
+  label:"Regression",tag:"model",pkg:"stats / broom",
+  title:"Build & evaluate a model",
+  desc:"Linear regression quantifies how predictors relate to an outcome. Check assumptions — linearity, normality of residuals, homoscedasticity — before trusting results.",
+  blocks:[
+    {type:"code",code:`<span class="cmt"># Fit model</span>
+mod <span class="op">&lt;-</span> <span class="fn">lm</span>(mpg <span class="op">~</span> hp <span class="op">+</span> wt <span class="op">+</span> <span class="fn">factor</span>(cyl), df)
+<span class="fn">summary</span>(mod)
+
+<span class="cmt"># Tidy output with broom</span>
+<span class="fn">library</span>(<span class="pk">broom</span>)
+<span class="fn">tidy</span>(mod)     <span class="cmt"># coefficients table</span>
+<span class="fn">glance</span>(mod)   <span class="cmt"># R², AIC, BIC</span>
+
+<span class="cmt"># Diagnostic plots</span>
+<span class="fn">par</span>(mfrow=<span class="fn">c</span>(<span class="num">2</span>,<span class="num">2</span>))
+<span class="fn">plot</span>(mod)     <span class="cmt"># 4 assumption checks</span>
+
+<span class="cmt"># Variance Inflation Factor</span>
+<span class="fn">library</span>(<span class="pk">car</span>)
+<span class="fn">vif</span>(mod)       <span class="cmt"># VIF > 5 = multicollinearity`},
+    {type:"output",label:"glance(mod)",text:`r.squared adj.r.squared  sigma  AIC    BIC
+0.868      0.853         2.35  156.3  166.0`},
+    {type:"alert",kind:"warn",icon:"⚠️",text:"<strong>Assumptions:</strong> Check residuals vs fitted (linearity), Normal Q-Q (normality), Scale-Location (homoscedasticity), Residuals vs Leverage (influential points)."}
+  ],
+  tips:[
+    {type:"graph",name:"Residual plots",when:"After every lm() fit",items:["plot(mod) gives 4 diagnostic charts","Residuals vs Fitted: check linearity","Q-Q plot: check normality of errors"],code:"par(mfrow=c(2,2)); plot(mod)"},
+    {type:"test",name:"VIF for multicollinearity",when:"Multiple predictors",items:["VIF > 5 → consider removing predictor","VIF > 10 → serious collinearity","car::vif() works on lm objects"],code:"car::vif(mod)"},
+    {type:"table",name:"broom::tidy() table",when:"Reporting coefficients",items:["Gives estimate, SE, t, p per predictor","glance() gives model-level R², AIC","augment() adds fitted values to data"],code:"broom::tidy(mod, conf.int=T)"}
+  ]
+},
+{
+  label:"Post-hoc & effect size",tag:"posthoc",pkg:"rstatix / effectsize",
+  title:"Post-hoc tests & effect sizes",
+  desc:"A significant p-value only tells you an effect exists. Post-hoc tests identify which groups differ; effect sizes tell you how much.",
+  blocks:[
+    {type:"code",code:`<span class="cmt"># After ANOVA — Tukey post-hoc</span>
+aov_res <span class="op">&lt;-</span> <span class="fn">aov</span>(mpg <span class="op">~</span> <span class="fn">factor</span>(cyl), df)
+<span class="fn">TukeyHSD</span>(aov_res)
+
+<span class="cmt"># Effect size for t-test: Cohen's d</span>
+<span class="fn">library</span>(<span class="pk">effectsize</span>)
+<span class="fn">cohens_d</span>(mpg <span class="op">~</span> am, data = df)
+
+<span class="cmt"># Effect size for ANOVA: eta²</span>
+<span class="fn">eta_squared</span>(aov_res)
+
+<span class="cmt"># Non-parametric post-hoc</span>
+<span class="fn">library</span>(<span class="pk">rstatix</span>)
+df <span class="op">%&gt;%</span>
+  <span class="fn">dunn_test</span>(mpg <span class="op">~</span> cyl,
+            p.adjust.method = <span class="str">"BH"</span>)`},
+    {type:"alert",kind:"info",icon:"📊",text:"<strong>Effect size guide:</strong> Cohen's d — small: 0.2, medium: 0.5, large: 0.8. Eta² — small: 0.01, medium: 0.06, large: 0.14."}
+  ],
+  tips:[
+    {type:"test",name:"Tukey vs Bonferroni",when:"After significant ANOVA",items:["Tukey HSD → balanced groups, all pairs","Bonferroni → conservative, any design","BH correction → best for many tests"],code:"TukeyHSD(aov_res)"},
+    {type:"test",name:"Effect size always",when:"Alongside every p-value",items:["Cohen's d for t-test","Eta² / partial Eta² for ANOVA","r for Wilcoxon / Spearman"],code:"effectsize::cohens_d(y~grp)"},
+    {type:"graph",name:"Means + CI plot",when:"Visualising group differences",items:["stat_summary() with mean_cl_normal","geom_errorbar() from summarised data","Include individual points with jitter"],code:"stat_summary(fun.data=mean_cl_normal)"}
+  ]
+},
+{
+  label:"Export & reproduce",tag:"export",pkg:"base R / renv",
+  title:"Export results & lock environment",
+  desc:"A reproducible analysis can be re-run identically by anyone, anywhere. Save data, plots, and session state.",
+  blocks:[
+    {type:"code",code:`<span class="fn">set.seed</span>(<span class="num">42</span>)   <span class="cmt"># always first</span>
+
+<span class="cmt"># Save data</span>
+<span class="fn">write.csv</span>(df_clean, <span class="str">"out/data.csv"</span>, row.names=<span class="kw">F</span>)
+<span class="fn">saveRDS</span>(df_clean, <span class="str">"out/data.rds"</span>)
+
+<span class="cmt"># Save ggplot at 300 dpi</span>
+<span class="fn">ggsave</span>(<span class="str">"out/plot.png"</span>,
+       width=<span class="num">8</span>, height=<span class="num">5</span>, dpi=<span class="num">300</span>)
+
+<span class="cmt"># Lock package versions</span>
+<span class="fn">library</span>(<span class="pk">renv</span>)
+<span class="fn">renv</span>::<span class="fn">snapshot</span>()
+
+<span class="cmt"># Session info</span>
+<span class="fn">writeLines</span>(
+  <span class="fn">capture.output</span>(<span class="fn">sessionInfo</span>()),
+  <span class="str">"session_info.txt"</span>)`},
+    {type:"alert",kind:"good",icon:"✅",text:"<strong>Checklist:</strong> <code>set.seed()</code> set · <code>renv.lock</code> committed · data as CSV + RDS · plot at 300 dpi · <code>session_info.txt</code> saved."}
+  ],
+  tips:[
+    {type:"table",name:"Reproducibility checklist",when:"Before sharing analysis",items:["All paths relative, not absolute","renv::snapshot() captures packages","R Markdown or Quarto for full report"],code:"renv::snapshot() ; renv::restore()"},
+    {type:"graph",name:"R Markdown / Quarto",when:"Full reproducible report",items:["Weaves code + prose + plots","render() produces HTML/PDF/Word","params: {} for parameterised reports"],code:"quarto::quarto_render('report.qmd')"},
+    {type:"test",name:"testthat for data",when:"Automating QC checks",items:["Test row counts match expectations","Assert no NAs post-cleaning","Validate value ranges with expect_true"],code:"testthat::expect_equal(nrow(df), 32)"}
+  ]
+}
+];
+
+const DT_ROWS = [
+  {scenario:"2 groups, normal",parametric:true,test:"t.test()",alt:"wilcox.test()",fn:"t.test(y~grp, var.equal=T)"},
+  {scenario:"2 groups, non-normal",parametric:false,test:"wilcox.test()",alt:"—",fn:"wilcox.test(y~grp)"},
+  {scenario:"3+ groups, normal",parametric:true,test:"aov()",alt:"kruskal.test()",fn:"aov(y~grp) + TukeyHSD()"},
+  {scenario:"3+ groups, non-normal",parametric:false,test:"kruskal.test()",alt:"—",fn:"kruskal.test(y~grp)"},
+  {scenario:"Paired 2 groups",parametric:true,test:"t.test(paired)",alt:"wilcox(paired)",fn:"t.test(x,y,paired=T)"},
+  {scenario:"Linear relationship",parametric:true,test:"cor.test()",alt:"Spearman",fn:"cor.test(x,y)"},
+  {scenario:"Check normality",parametric:false,test:"shapiro.test()",alt:"ks.test()",fn:"shapiro.test(x)"},
+];
+
+let cur = 0;
+
+function heatSVG(){
+  const lb=["mpg","cyl","disp","hp","wt"];
+  const vl=[[1,-0.85,-0.85,-0.78,-0.87],[-0.85,1,.90,.83,.78],[-0.85,.90,1,.79,.89],[-0.78,.83,.79,1,.66],[-0.87,.78,.89,.66,1]];
+  const sz=40,pd=42,n=5,W=n*sz+pd*2,H=n*sz+pd+30;
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:230px">`;
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){
+    const v=vl[r][c],a=Math.abs(v),pos=v>=0;
+    s+=`<rect x="${pd+c*sz}" y="${pd+r*sz}" width="${sz-3}" height="${sz-3}" rx="5" fill="${pos?`rgba(124,109,250,${a})`:`rgba(249,124,109,${a})`}"/>`;
+    s+=`<text x="${pd+c*sz+sz/2-1.5}" y="${pd+r*sz+sz/2+4}" text-anchor="middle" font-size="10" font-family="'DM Mono',monospace" fill="${a>.45?"#e8eaf0":"#4a4f65"}" font-weight="300">${v.toFixed(2)}</text>`;
+  }
+  lb.forEach((l,i)=>{
+    s+=`<text x="${pd+i*sz+sz/2-1.5}" y="${pd-9}" text-anchor="middle" font-size="10" font-family="'Outfit',sans-serif" fill="#8a8fa8">${l}</text>`;
+    s+=`<text x="${pd-6}" y="${pd+i*sz+sz/2+4}" text-anchor="end" font-size="10" font-family="'Outfit',sans-serif" fill="#8a8fa8">${l}</text>`;
+  });
+  s+=`<circle cx="${W-80}" cy="${H-12}" r="5" fill="rgba(124,109,250,.85)"/><text x="${W-72}" y="${H-8}" font-size="9.5" font-family="'Outfit',sans-serif" fill="#8a8fa8">Positive</text>`;
+  s+=`<circle cx="${W-24}" cy="${H-12}" r="5" fill="rgba(249,124,109,.85)"/><text x="${W-16}" y="${H-8}" text-anchor="middle" font-size="9.5" font-family="'Outfit',sans-serif" fill="#8a8fa8">Neg</text>`;
+  return s+`</svg>`;
+}
+
+function scatterSVG(){
+  const pts=[{hp:110,mpg:21,c:6},{hp:110,mpg:21,c:6},{hp:93,mpg:22.8,c:4},{hp:110,mpg:21.4,c:6},{hp:175,mpg:18.7,c:8},{hp:105,mpg:18.1,c:6},{hp:245,mpg:14.3,c:8},{hp:62,mpg:24.4,c:4},{hp:95,mpg:22.8,c:4},{hp:123,mpg:19.2,c:6},{hp:123,mpg:17.8,c:6},{hp:180,mpg:16.4,c:8},{hp:180,mpg:17.3,c:8},{hp:180,mpg:15.2,c:8},{hp:205,mpg:10.4,c:8},{hp:215,mpg:10.4,c:8},{hp:230,mpg:14.7,c:8},{hp:66,mpg:32.4,c:4},{hp:52,mpg:30.4,c:4},{hp:65,mpg:33.9,c:4},{hp:97,mpg:21.5,c:4},{hp:150,mpg:15.5,c:8},{hp:150,mpg:15.2,c:8},{hp:245,mpg:13.3,c:8},{hp:175,mpg:19.2,c:8},{hp:66,mpg:27.3,c:4},{hp:91,mpg:26,c:4},{hp:113,mpg:30.4,c:4},{hp:264,mpg:15.8,c:8},{hp:175,mpg:19.7,c:6},{hp:335,mpg:15,c:8},{hp:109,mpg:21.4,c:4}];
+  const W=460,H=200,pl=36,pr=10,pt=10,pb=40;
+  const xS=(W-pl-pr)/285,yS=(H-pt-pb)/25;
+  const cx=h=>pl+(h-50)*xS,cy=m=>H-pb-(m-9)*yS;
+  const cl={4:"#7c6dfa",6:"#4fd9c4",8:"#f97c6d"};
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:200px"><defs><filter id="g2"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  for(let g=10;g<=35;g+=5)s+=`<line x1="${pl}" y1="${cy(g)}" x2="${W-pr}" y2="${cy(g)}" stroke="#ffffff07" stroke-width="1"/>`;
+  pts.forEach(p=>s+=`<circle cx="${cx(p.hp).toFixed(1)}" cy="${cy(p.mpg).toFixed(1)}" r="5" fill="${cl[p.c]}" opacity=".8" filter="url(#g2)"/>`);
+  [10,15,20,25,30,35].forEach(v=>s+=`<text x="${pl-5}" y="${cy(v)+4}" text-anchor="end" font-size="9.5" font-family="'DM Mono',monospace" fill="#4a4f65">${v}</text>`);
+  [100,150,200,250,300].forEach(v=>s+=`<text x="${cx(v)}" y="${H-pb+12}" text-anchor="middle" font-size="9.5" font-family="'DM Mono',monospace" fill="#4a4f65">${v}</text>`);
+  s+=`<text x="${W/2}" y="${H}" text-anchor="middle" font-size="10.5" font-family="'Outfit',sans-serif" fill="#8a8fa8">Horsepower</text>`;
+  s+=`<text transform="rotate(-90)" x="${-H/2}" y="11" text-anchor="middle" font-size="10.5" font-family="'Outfit',sans-serif" fill="#8a8fa8">mpg</text>`;
+  [{c:4,col:"#7c6dfa",l:"4-cyl"},{c:6,col:"#4fd9c4",l:"6-cyl"},{c:8,col:"#f97c6d",l:"8-cyl"}].forEach((d,i)=>{
+    s+=`<circle cx="${pl+i*72}" cy="${H-pb+28}" r="4.5" fill="${d.col}"/>`;
+    s+=`<text x="${pl+i*72+10}" y="${H-pb+32}" font-size="10" font-family="'Outfit',sans-serif" fill="#8a8fa8">${d.l}</text>`;
+  });
+  return s+`</svg>`;
+}
+
+function renderBlock(b){
+  if(b.type==="metrics") return `<div class="metrics">${b.items.map(m=>`<div class="mc"><div class="mc-l">${m.l}</div><div class="mc-v" style="color:${m.c}">${m.v}</div><div class="mc-s">${m.s}</div></div>`).join("")}</div>`;
+  if(b.type==="code"){
+    const raw=b.code.replace(/<[^>]+>/g,"");
+    return `<div class="cw"><div class="cbar"><div class="cdots"><div class="cd"></div><div class="cd"></div><div class="cd"></div></div><span class="clang">R</span><button class="ccopy" onclick="doCopy(this,'${encodeURIComponent(raw)}')">Copy</button></div><pre>${b.code}</pre></div>`;
+  }
+  if(b.type==="output") return `<div class="ow"><div class="obar"><div class="odot"></div><span class="olabel">${b.label}</span></div><div class="obody">${b.text}</div></div>`;
+  if(b.type==="alert") return `<div class="alert ${b.kind}"><div class="ai">${b.icon}</div><div class="at">${b.text}</div></div>`;
+  if(b.type==="viz") return `<div class="vw"><div class="vbar"><span class="vlabel">${b.label}</span></div><div class="vbody">${b.viz==="heatmap"?heatSVG():scatterSVG()}</div></div>`;
+  if(b.type==="dtable") return `<div class="cw"><div class="cbar"><div class="cdots"><div class="cd"></div><div class="cd"></div><div class="cd"></div></div><span class="clang" style="text-align:left;padding-left:4px">Test selection guide</span></div><div style="overflow-x:auto;background:var(--bg)"><table class="dtable"><thead><tr><th>Scenario</th><th>Primary test</th><th>Alternative</th><th>R function</th></tr></thead><tbody>${DT_ROWS.map(r=>`<tr><td>${r.scenario}</td><td><span class="dt-tag ${r.parametric?"param":"nonp"}">${r.parametric?"parametric":"non-param"}</span> ${r.test}</td><td style="color:var(--t3)">${r.alt}</td><td class="dt-fn">${r.fn}</td></tr>`).join("")}</tbody></table></div></div>`;
+  return "";
+}
+
+function renderTip(t){
+  const badgeClass = t.type==="graph"?"graph":t.type==="test"?"test":t.type==="warn"?"warn":"table";
+  const icon = t.type==="graph"?"◈":t.type==="test"?"⊕":t.type==="warn"?"⚠":"▦";
+  return `<div class="tip-card">
+    <div class="tc-head">
+      <span class="tc-badge ${badgeClass}">${icon} ${t.type}</span>
+      <span class="tc-name">${t.name}</span>
+    </div>
+    <div class="tc-body">
+      <div class="tc-when">Use when</div>
+      <ul class="tc-list">${t.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+      ${t.code?`<div class="tc-code">${t.code}</div>`:""}
+      ${t.vs?`<div class="tc-vs">${t.vs.map((v,i)=>`<div class="vs-pill${i===0?" hi":""}">${v}</div>`).join("")}</div>`:""}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const s=STEPS[cur], tot=STEPS.length;
+  document.getElementById("pfill").style.width=((cur+1)/tot*100)+"%";
+  document.getElementById("tstep").textContent=`${cur+1} / ${tot}`;
+  document.getElementById("tpkg").textContent=s.pkg.split(" / ")[0];
+  document.getElementById("ttag").textContent=s.tag;
+  document.getElementById("cstep").textContent=`Step ${cur+1} of ${tot}`;
+  document.getElementById("cpkg").textContent=s.pkg;
+  document.getElementById("mtitle").textContent=s.title;
+  document.getElementById("mdesc").textContent=s.desc;
+
+  document.getElementById("sidebar").innerHTML=STEPS.map((st,i)=>{
+    const state=i<cur?"done":i===cur?"active":"pend";
+    return `<div class="si ${state}" onclick="jump(${i})"><div class="si-n ${state}">${state==="done"?"✓":i+1}</div><div><div class="si-label">${st.label}</div><div class="si-sub">${st.tag}</div></div></div>`;
+  }).join("");
+
+  document.getElementById("mbody").innerHTML=s.blocks.map(renderBlock).join("");
+  document.getElementById("mbody").scrollTop=0;
+
+  const tipHTML = s.tips ? s.tips.map(renderTip).join("") : `<div style="font-size:12px;color:var(--t3);padding:8px 0">No specific tips for this step.</div>`;
+  document.getElementById("rpbody").innerHTML=tipHTML;
+  document.getElementById("rp-title-txt").textContent = s.tips&&s.tips.length ? `${s.tips.length} recommendation${s.tips.length>1?"s":""}` : "Smart tips";
+  document.getElementById("rp-sub-txt").textContent = s.tips&&s.tips.length ? `graphs · tests · tables for this step` : "Step-specific guidance";
+
+  document.getElementById("sdots").innerHTML=STEPS.map((_,i)=>`<div class="sdot ${i<cur?"done":i===cur?"active":""}" onclick="jump(${i})"></div>`).join("");
+  document.getElementById("btnp").disabled=cur===0;
+  const nb=document.getElementById("btnn");
+  if(cur===tot-1){nb.textContent="Done ↗";nb.onclick=()=>sendPrompt("I finished all 10 R analysis steps. What advanced analyses should I explore next?");}
+  else{nb.textContent="Next →";nb.onclick=()=>go(1);}
+}
+
+function go(d){cur=Math.max(0,Math.min(STEPS.length-1,cur+d));render();}
+function jump(i){cur=i;render();}
+function doCopy(btn,enc){
+  navigator.clipboard.writeText(decodeURIComponent(enc)).then(()=>{
+    btn.textContent="Copied!";btn.classList.add("ok");
+    setTimeout(()=>{btn.textContent="Copy";btn.classList.remove("ok");},1500);
+  });
+}
+render();
+</script>
